@@ -1,0 +1,33 @@
+---
+
+services:
+  server:
+    image: docker.gitea.com/gitea:1.16-rootless
+    environment:
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=db:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=$db_pwd
+    restart: always
+    volumes:
+      - ./data:/var/lib/gitea # Persist Gitea data
+      - ./config:/etc/gitea # Persist Gitea configuration
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+      - "2222:2222"
+    depends_on:
+      - db
+
+  db:
+    image: docker.io/library/postgres:14
+    container_name: db
+    restart: always
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=$db_pwd
+      - POSTGRES_DB=gitea
+    volumes:
+      - ./postgres:/var/lib/postgresql/data # Persist PostgreSQL data
