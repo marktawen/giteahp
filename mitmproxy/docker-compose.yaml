@@ -1,0 +1,10 @@
+---
+services:
+  mitmproxy:
+    image: mitmproxy/mitmproxy
+    ports:
+      - "443:8080"  # Expose port 443 for HTTPS traffic
+    volumes:
+      - ./data:/home/mitmproxy/.mitmproxy  # Persist data
+      - ./certs:/certs # Mount certificates copied from firewall
+    command: mitmdump --mode reverse:$MITMPROXY_TARGET --certs /certs/cert.pem -w /home/mitmproxy/.mitmproxy/data-dump.mitm --set block_global=false
