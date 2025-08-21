@@ -1,0 +1,10 @@
+---
+services:
+  ssh-mitm:
+    build: . # Build the SSH MITM proxy
+    container_name: ssh-mitm
+    ports:
+      - "222:10022" # Expose port 222 for SSH traffic
+    volumes:
+      - ./data:/app  # Persist data
+    restart: unless-stopped
